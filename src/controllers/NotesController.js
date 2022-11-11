@@ -24,7 +24,19 @@ class NotesController {
 
     await knex('movie_tags').insert(tagsInsert)
 
-    response.status(201).json()
+    return response.status(201).json()
+  }
+
+  async show(request, response) {
+    const { id } = request.params
+
+    const note = await knex('movie_notes').where({ id }).first()
+    const tags = await knex('movie_tags').where({ note_id: id }).orderBy('name')
+
+    return response.json({
+      ...note,
+      tags
+    })
   }
 }
 
